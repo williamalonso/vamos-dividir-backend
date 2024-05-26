@@ -1,30 +1,15 @@
 // src/pages/docs.tsx
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import 'swagger-ui-react/swagger-ui.css';
+// src/pages/index.tsx
+import React from 'react';
 
-const SwaggerUI = dynamic(import('swagger-ui-react'), { ssr: false });
-
-const DocsPage = () => {
-  const [spec, setSpec] = useState(null);
-
-  useEffect(() => {
-    fetch('/api/swagger.json')
-      .then((res) => res.json())
-      .then((data) => setSpec(data));
-  }, []);
-
-  if (!spec) {
-    return <div>Loading...</div>;
-  }
+const HomePage = () => {
 
   return (
-    <div className="pt-6">
-      <section className="container">
-        <SwaggerUI spec={spec} />
-      </section>
+    <div>
+      Esta é a página inicial da api
     </div>
   );
 };
 
-export default DocsPage;
+export default HomePage;
