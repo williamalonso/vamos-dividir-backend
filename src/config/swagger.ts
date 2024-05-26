@@ -9,6 +9,16 @@ const options = {
       version: '1.0.0',
       description: 'Esta é a documentação da API - Vamos Dividir',
     },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Servidor de desenvolvimento',
+      },
+      {
+        url: 'https://vamos-dividir-backend.vercel.app',
+        description: 'Servidor de produção',
+      },
+    ],
     components: {
       schemas: {
         User: {
@@ -35,7 +45,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/controllers/**/*.ts', './src/models/**/*.ts', './src/pages/api/**/*.ts'], // Ajuste para o caminho correto
+  apis: ['./src/controllers/**/*.ts', './src/models/**/*.ts', './src/pages/api/**/*.ts'],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
