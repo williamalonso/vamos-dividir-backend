@@ -12,9 +12,6 @@ const userSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  jwtToken: {
-    type: String,
-  }
 });
 
 // Faz um hash na senha do usuário antes de ser salva no banco de dados sempre que um novo usuário for criado ou a senha de um usuário existente for atualizada
