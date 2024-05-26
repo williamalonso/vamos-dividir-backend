@@ -1,3 +1,4 @@
+// src/models/demandModel.ts
 import mongoose, { Schema } from 'mongoose';
 import { demandInterface } from '@/interface/demandInterface';
 

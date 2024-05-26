@@ -1,4 +1,4 @@
-// config/database.ts
+// src/config/database.ts
 
 import mongoose from 'mongoose';
 
@@ -11,7 +11,6 @@ if (!connectionString) {
 const connectToDatabase = async () => {
   try {
     await mongoose.connect(connectionString);
-    console.log('Conectado ao MongoDB Atlas');
   } catch (error) {
     console.error('Erro ao conectar ao MongoDB Atlas:', error);
     process.exit(1); // Opcional: encerra o processo caso a conexão falhe

@@ -1,3 +1,4 @@
+// src/models/userModel.ts
 import mongoose, { Schema } from 'mongoose';
 import { hashPassword } from '@/middleware/passwordMiddleware';
 import { userInterface } from '@/interface/userInterface';

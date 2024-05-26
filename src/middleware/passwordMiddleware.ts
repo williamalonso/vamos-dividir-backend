@@ -1,3 +1,4 @@
+// src/middleware/passwordMiddleware.ts
 import bcrypt from 'bcrypt';
 import { userInterface } from '@/interface/userInterface';
 
