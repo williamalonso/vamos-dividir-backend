@@ -1,6 +1,9 @@
 // src/config/swagger.ts
 import swaggerJsDoc from 'swagger-jsdoc';
 
+const controllersPath = './src/controllers/*.ts';
+const modelsPath = './src/models/*.ts';
+
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -35,7 +38,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/controllers/*.ts', './src/models/*.ts'], // Ajuste para o caminho correto
+  apis: [controllersPath, modelsPath], // Ajuste para o caminho correto
 };
 
 const swaggerSpec = swaggerJsDoc(options);
