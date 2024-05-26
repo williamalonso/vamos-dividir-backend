@@ -1,6 +1,5 @@
 // src/config/swagger.ts
 import swaggerJsDoc from 'swagger-jsdoc';
-import path from 'path';
 
 const options = {
   definition: {
@@ -36,10 +35,7 @@ const options = {
       },
     },
   },
-  apis: [
-    path.join(process.cwd(), 'src/controllers/**/*.ts'),
-    path.join(process.cwd(), 'src/models/**/*.ts'),
-  ],
+  apis: ['./src/controllers/**/*.ts', './src/models/**/*.ts'], // Ajuste para o caminho correto
 };
 
 const swaggerSpec = swaggerJsDoc(options);
