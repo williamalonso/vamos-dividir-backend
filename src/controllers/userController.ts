@@ -90,3 +90,28 @@ export const register = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: 'Erro no servidor' });
   }
 };
+
+// delete user
+export const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+
+  const userId = req.query.id as string; // Obtém o ID do usuário a ser excluído da consulta
+
+  try {
+    // Verifica se o usuário existe no banco de dados
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    // Exclui o usuário do banco de dados
+    await User.findByIdAndDelete(userId);
+
+    // Retorna uma resposta de sucesso
+    return res.status(200).json({ message: 'Usuário excluído com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
+    return res.status(500).json({ message: 'Erro no servidor' });
+  }
+};
