@@ -35,7 +35,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/controllers/userController.ts', './src/models/userModel.ts'], // Ajuste para o caminho correto
+  apis: ['./src/controllers/*.ts', './src/models/*.ts'], // Ajuste para o caminho correto
 };
 
 const swaggerSpec = swaggerJsDoc(options);
