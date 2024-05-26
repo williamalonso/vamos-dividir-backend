@@ -20,6 +20,37 @@ export const getAllUsers = async (req: NextApiRequest, res: NextApiResponse) => 
   }
 };
 
+// create user
+export const registerUser = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+  // Extrair dados do corpo da requisição
+  const { email, password } = req.body;
+  try {
+    // Verifica se o usuário já existe no banco de dados; Verificar se o email já está em uso
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      // Se o email já estiver em uso, enviar uma resposta com status 400 (Bad Request)
+      return res.status(400).json({ message: 'O usuário já existe' });
+    }
+    // Gera um hash da senha
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Cria uma nova instância do usuário com a senha hashada
+    const newUser = new User({ email, password: hashedPassword });
+    // Salva o novo usuário no banco de dados
+    await newUser.save();
+    // Retorna uma resposta de sucesso
+    res.status(201).json({ 
+      message: 'Usuário cadastrado com sucesso.', 
+      user: newUser 
+    });
+  } catch (error) {
+    // Se ocorrer algum erro, enviar uma resposta de erro com status 500
+    console.error('Erro no cadastro de usuário:', error);
+    return res.status(500).json({ message: 'Erro no servidor' });
+  }
+};
+
 // login
 export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
   
@@ -57,15 +88,15 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Verifica se a senha é válida
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log('Senha fornecida:', password);
-    console.log('Hash de senha armazenado:', user.password);
-    console.log('Resultado da comparação:', isPasswordValid);
+    
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Senha inválida' });
     }
 
     // Gerar um token JWT com o ID do usuário como payload
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, email: user.email}, `${JWT_SECRET}`, {
+      expiresIn: '24h',
+    });
 
     // Retorna o token JWT
     return res.status(200).json({ token });
@@ -74,37 +105,6 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: 'Erro no servidor' });
   }
 }
-
-// create user
-export const registerUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Conecta ao banco de dados
-  await connectToDatabase();
-  // Extrair dados do corpo da requisição
-  const { email, password } = req.body;
-  try {
-    // Verifica se o usuário já existe no banco de dados; Verificar se o email já está em uso
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      // Se o email já estiver em uso, enviar uma resposta com status 400 (Bad Request)
-      return res.status(400).json({ message: 'O usuário já existe' });
-    }
-    // Gera um hash da senha
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Cria uma nova instância do usuário com a senha hashada
-    const newUser = new User({ email, password: hashedPassword });
-    // Salva o novo usuário no banco de dados
-    await newUser.save();
-    // Retorna uma resposta de sucesso
-    res.status(201).json({ 
-      message: 'Usuário cadastrado com sucesso.', 
-      user: newUser 
-    });
-  } catch (error) {
-    // Se ocorrer algum erro, enviar uma resposta de erro com status 500
-    console.error('Erro no cadastro de usuário:', error);
-    return res.status(500).json({ message: 'Erro no servidor' });
-  }
-};
 
 // delete user
 export const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
