@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
  * @swagger
- * src/pages/api/user/getall:
+ * /api/user/getall:
  *   get:
  *     summary: Retrieve a list of users
  *     description: Retrieve a list of all users from the database.
