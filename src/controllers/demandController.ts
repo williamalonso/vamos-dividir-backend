@@ -102,24 +102,23 @@ export const deleteDemand = async (req: NextApiRequest, res: NextApiResponse) =>
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  // Extrai o ID da demanda da requisição
-  const id = req.query.id as string;
+  const { demandId, userId } = req.query;
 
   try {
-    // Verifica se a demanda com o ID fornecido existe
-    const existingDemand = await Demand.findById(id);
+    // Verifica se a demanda existe e pertence ao usuário
+    const demand = await Demand.findOne({ _id: demandId, user: userId });
 
-    if (!existingDemand) {
+    if (!demand) {
       return res.status(404).json({ message: 'Demanda não encontrada' });
     }
 
-    // Remove a demanda do banco de dados
-    await existingDemand.remove();
+    // Remove a demanda
+    await Demand.deleteOne({ _id: demandId });
 
     // Retorna uma resposta de sucesso
-    res.status(200).json({ message: 'Demanda deletada com sucesso' });
+    return res.status(200).json({ message: 'Demanda deletada com sucesso' });
   } catch (error) {
     console.error('Erro ao deletar demanda:', error);
-    res.status(500).json({ message: 'Erro ao deletar demanda' });
+    return res.status(500).json({ message: 'Erro ao deletar demanda' });
   }
 };
