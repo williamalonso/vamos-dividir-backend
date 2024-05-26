@@ -1,5 +1,3 @@
-// controllers/userController.ts
-
 import User from '@/models/userModel';
 import connectToDatabase from '@/config/database';
 import { NextApiRequest, NextApiResponse } from 'next';

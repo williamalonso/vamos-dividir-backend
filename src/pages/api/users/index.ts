@@ -1,5 +1,3 @@
-// pages/api/users/index.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUsers } from '@/controllers/userController';
 
