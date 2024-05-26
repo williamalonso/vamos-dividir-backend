@@ -9,7 +9,7 @@ interface DocsProps {
 
 const DocsPage = ({ spec }: DocsProps) => {
   if (!spec) {
-    return <div>Loading...</div>;
+    return <div>Loading...teste</div>;
   }
 
   return (
