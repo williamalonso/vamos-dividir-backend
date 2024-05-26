@@ -59,3 +59,31 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: 'Erro no servidor' });
   }
 }
+
+// create user
+export const register = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+
+  const { email, password } = req.body;
+
+  try {
+    // Verifica se o usuário já existe no banco de dados
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'O usuário já existe' });
+    }
+
+    // Cria uma nova instância do usuário
+    const newUser = new User({ email, password });
+
+    // Salva o novo usuário no banco de dados
+    await newUser.save();
+
+    // Retorna uma resposta de sucesso
+    return res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
+  } catch (error) {
+    console.error('Erro no cadastro de usuário:', error);
+    return res.status(500).json({ message: 'Erro no servidor' });
+  }
+};
