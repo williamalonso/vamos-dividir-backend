@@ -35,7 +35,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/docs/**/*.ts'], // Ajuste para o caminho correto
+  apis: ['./src/pages/api/**/*.ts'], // Ajuste para o caminho correto
 };
 
 const swaggerSpec = swaggerJsDoc(options);
