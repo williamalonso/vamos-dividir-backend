@@ -40,3 +40,86 @@ export const getUserDemands = async (req: NextApiRequest, res: NextApiResponse) 
     res.status(500).json({ message: 'Erro ao buscar as demandas do usuário' });
   }
 };
+
+// Busca demanda especifica por id
+export const getDemandById = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+
+  const demandId = req.query.demandId as string; // Obtém o ID da demanda da consulta
+
+  try {
+    // Encontra a demanda com o ID especificado
+    const demand = await Demand.findById(demandId);
+    
+    // Verifica se a demanda foi encontrada
+    if (!demand) {
+      return res.status(404).json({ message: 'Demanda não encontrada' });
+    }
+
+    // Retorna a demanda encontrada
+    res.status(200).json(demand);
+  } catch (error) {
+    console.error('Erro ao buscar a demanda:', error);
+    res.status(500).json({ message: 'Erro ao buscar a demanda' });
+  }
+};
+
+// atualiza demanda especifica por id
+export const updateDemand = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+
+  // Extrai o ID da demanda e os novos dados da requisição
+  const { id } = req.query;
+  const { title, description } = req.body;
+
+  try {
+    // Verifica se a demanda com o ID fornecido existe
+    const existingDemand = await Demand.findById(id);
+
+    if (!existingDemand) {
+      return res.status(404).json({ message: 'Demanda não encontrada' });
+    }
+
+    // Atualiza os dados da demanda com os novos dados
+    existingDemand.title = title;
+    existingDemand.description = description;
+
+    // Salva as alterações no banco de dados
+    await existingDemand.save();
+
+    // Retorna uma resposta de sucesso
+    res.status(200).json({ message: 'Demanda atualizada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao atualizar demanda:', error);
+    res.status(500).json({ message: 'Erro ao atualizar demanda' });
+  }
+};
+
+// deleta demanda
+export const deleteDemand = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Conecta ao banco de dados
+  await connectToDatabase();
+
+  // Extrai o ID da demanda da requisição
+  const id = req.query.id as string;
+
+  try {
+    // Verifica se a demanda com o ID fornecido existe
+    const existingDemand = await Demand.findById(id);
+
+    if (!existingDemand) {
+      return res.status(404).json({ message: 'Demanda não encontrada' });
+    }
+
+    // Remove a demanda do banco de dados
+    await existingDemand.remove();
+
+    // Retorna uma resposta de sucesso
+    res.status(200).json({ message: 'Demanda deletada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao deletar demanda:', error);
+    res.status(500).json({ message: 'Erro ao deletar demanda' });
+  }
+};
