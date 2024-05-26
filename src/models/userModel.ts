@@ -1,10 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
-
-interface IUser extends Document {
-  email: string;
-  password: string;
-  jwtToken?: string;
-}
+import { hashPassword } from '@/middleware/passwordMiddleware';
+import { userInterface } from '@/interface/userInterface';
 
 const userSchema: Schema = new Schema({
   email: {
@@ -21,6 +17,9 @@ const userSchema: Schema = new Schema({
   }
 });
 
-const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+// Use a função de pré-salvamento definida no middleware
+userSchema.pre<userInterface>('save', hashPassword);
+
+const User = mongoose.models.User || mongoose.model<userInterface>('User', userSchema);
 
 export default User;
