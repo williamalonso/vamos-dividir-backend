@@ -127,3 +127,60 @@ export const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: 'Erro no servidor' });
   }
 };
+
+// update password
+export const updatePassword = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    // Chave secreta para assinar o token JWT
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    // Verificar se JWT_SECRET está definido
+    if (!JWT_SECRET) {
+      throw new Error('JWT_SECRET não está definido.');
+    }
+
+    // Verificar se o método é POST
+    if (req.method !== 'POST') {
+      return res.status(405).json({ message: 'Método não permitido' });
+    }
+
+    // Extrair email, senha atual e nova senha do corpo da requisição
+    const { email, currentPassword, newPassword } = req.body;
+
+    // Verificar se o email, senha atual e nova senha foram fornecidos
+    if (!email || !currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Por favor, forneça email, senha atual e nova senha.' });
+    }
+
+    // Conectar ao banco de dados
+    await connectToDatabase();
+
+    // Encontrar o usuário pelo email
+    const user = await User.findOne({ email });
+
+    // Verificar se o usuário existe
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    // Verificar se a senha atual fornecida corresponde à senha armazenada no banco de dados
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Senha atual inválida.' });
+    }
+
+    // Gerar um hash da nova senha
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Atualizar a senha do usuário no banco de dados
+    user.password = hashedNewPassword;
+    await user.save();
+
+    // Retornar uma resposta de sucesso
+    return res.status(200).json({ message: 'Senha atualizada com sucesso.' });
+  } catch (error) {
+    // Se ocorrer algum erro, enviar uma resposta de erro com status 500
+    console.error('Erro ao atualizar senha do usuário:', error);
+    return res.status(500).json({ message: 'Erro ao atualizar senha do usuário.' });
+  }
+}
