@@ -73,8 +73,12 @@ export const register = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ message: 'O usuário já existe' });
     }
 
-    // Cria uma nova instância do usuário
-    const newUser = new User({ email, password });
+    // Gera um hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Cria uma nova instância do usuário com a senha hashada
+    const newUser = new User({ email, password: hashedPassword });
 
     // Salva o novo usuário no banco de dados
     await newUser.save();
