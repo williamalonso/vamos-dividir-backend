@@ -57,6 +57,9 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Verifica se a senha é válida
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log('Senha fornecida:', password);
+    console.log('Hash de senha armazenado:', user.password);
+    console.log('Resultado da comparação:', isPasswordValid);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Senha inválida' });
     }
