@@ -23,7 +23,8 @@ const DocsPage = ({ spec }: DocsProps) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/swagger.json'); // Altere o URL conforme necessário
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'; // Obtemos o host dinamicamente
+    const res = await fetch(`${baseUrl}/api/swagger.json`); // Usamos o caminho relativo
     const spec = await res.json();
     return { props: { spec } };
   } catch (error) {
