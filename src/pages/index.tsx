@@ -1,6 +1,5 @@
-// src/pages/docs.tsx
-import dynamic from 'next/dynamic';
 // src/pages/index.tsx
+
 import React from 'react';
 
 const HomePage = () => {

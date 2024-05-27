@@ -1,3 +1,5 @@
+// src/pages/api/user/delete/index.tsx
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteUser } from '@/controllers/userController';
 

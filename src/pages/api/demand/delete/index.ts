@@ -1,3 +1,5 @@
+// src/pages/api/demand/delete/index.tsx
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteDemand } from '@/controllers/demandController';
 

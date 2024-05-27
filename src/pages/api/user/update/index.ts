@@ -1,3 +1,5 @@
+// src/pages/api/user/update/index.tsx
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { updatePassword } from '@/controllers/userController';
 

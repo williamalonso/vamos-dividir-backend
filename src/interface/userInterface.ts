@@ -1,3 +1,5 @@
+// src/interface/userInterface.ts
+
 import { Document } from 'mongoose';
 
 export interface userInterface extends Document {

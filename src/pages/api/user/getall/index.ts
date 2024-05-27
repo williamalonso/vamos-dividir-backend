@@ -1,3 +1,5 @@
+// src/pages/api/user/getall/index.tsx
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllUsers } from '@/controllers/userController';
 

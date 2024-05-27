@@ -1,3 +1,5 @@
+// src/interface/demandInterface.ts
+
 import mongoose, { Document } from 'mongoose';
 
 export interface demandInterface extends Document {

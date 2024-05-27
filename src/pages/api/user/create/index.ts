@@ -1,3 +1,5 @@
+// src/pages/api/user/create/index.tsx
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { registerUser } from '@/controllers/userController';
 
