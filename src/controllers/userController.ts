@@ -188,3 +188,43 @@ export const updatePassword = async (req: NextApiRequest, res: NextApiResponse) 
     return res.status(500).json({ message: 'Erro ao atualizar senha do usuário.' });
   }
 }
+
+// renovar token
+export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
+  const JWT_SECRET = process.env.JWT_SECRET;
+
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET não está definido.');
+  }
+
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ message: 'Token não fornecido' });
+  }
+
+  try {
+    // Verificar e decodificar o token
+    const decoded = jwt.verify(token, `${JWT_SECRET}`) as { userId: string };
+
+    // Verificar se o usuário ainda existe no banco de dados
+    await connectToDatabase();
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    // Gerar um novo token
+    const newToken = jwt.sign({ userId: user._id }, `${JWT_SECRET}`, { expiresIn: '24h' });
+
+    // Retorna o novo token
+    res.status(200).json({ token: newToken, message: 'Token renovavo com sucesso' });
+
+  } catch (error) {
+
+    console.error('Erro ao renovar o token:', error);
+    res.status(401).json({ message: 'Token inválido ou expirado' });
+  }
+
+};
