@@ -38,7 +38,12 @@ export const getUserDemands = async (req: NextApiRequest, res: NextApiResponse) 
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  const userId = req.query.userId as string; // Obtém o ID do usuário da consulta
+  // Obtém o ID do usuário do middleware de autenticação
+  const userId = (req as any).userId as string;
+
+  if(!userId) {
+    return res.status(400).json({ message: 'userId ou token nao fornecido' });
+  }
 
   try {
     // Encontra todas as demandas associadas ao usuário
@@ -57,11 +62,23 @@ export const getDemandById = async (req: NextApiRequest, res: NextApiResponse) =
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  const demandId = req.query.demandId as string; // Obtém o ID da demanda da consulta
+  // Obtém o ID da demanda da consulta
+  const { demandId } = req.query;
+
+  if(!demandId) {
+    return res.status(400).json({ message: 'demandId nao fornecido' });
+  }
+
+  // Obtém o ID do usuário do middleware de autenticação
+  const userId = (req as any).userId as string;
+
+  if(!userId) {
+    return res.status(400).json({ message: 'userId nao fornecido' });
+  }
 
   try {
-    // Encontra a demanda com o ID especificado
-    const demand = await Demand.findById(demandId);
+    // Encontra a demanda com o ID especificado e verifica se pertence ao usuário autenticado
+    const demand = await Demand.findOne({ _id: demandId, user: userId });
     
     // Verifica se a demanda foi encontrada
     if (!demand) {
@@ -70,10 +87,12 @@ export const getDemandById = async (req: NextApiRequest, res: NextApiResponse) =
 
     // Retorna a demanda encontrada
     res.status(200).json(demand);
+
   } catch (error) {
     console.error('Erro ao buscar a demanda:', error);
     res.status(500).json({ message: 'Erro ao buscar a demanda' });
   }
+
 };
 
 // atualiza demanda especifica por id
@@ -84,6 +103,13 @@ export const updateDemand = async (req: NextApiRequest, res: NextApiResponse) =>
   // Extrai o ID da demanda e os novos dados da requisição
   const { id } = req.query;
   const { title, description } = req.body;
+
+  // Obtém o ID do usuário do middleware de autenticação
+  const userId = (req as any).userId as string;
+
+  if(!userId) {
+    return res.status(400).json({ message: 'userId nao fornecido' });
+  }
 
   try {
     // Verifica se a demanda com o ID fornecido existe
