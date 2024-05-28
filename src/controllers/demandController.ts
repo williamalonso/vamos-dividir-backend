@@ -139,7 +139,14 @@ export const deleteDemand = async (req: NextApiRequest, res: NextApiResponse) =>
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  const { demandId, userId } = req.query;
+  const { demandId } = req.query;
+
+  // Obtém o ID do usuário do middleware de autenticação
+  const userId = (req as any).userId as string;
+
+  if(!userId) {
+    return res.status(400).json({ message: 'userId nao fornecido' });
+  }
 
   try {
     // Verifica se a demanda existe e pertence ao usuário
@@ -154,8 +161,12 @@ export const deleteDemand = async (req: NextApiRequest, res: NextApiResponse) =>
 
     // Retorna uma resposta de sucesso
     return res.status(200).json({ message: 'Demanda deletada com sucesso' });
+
   } catch (error) {
+
     console.error('Erro ao deletar demanda:', error);
     return res.status(500).json({ message: 'Erro ao deletar demanda' });
+
   }
+  
 };
