@@ -9,7 +9,16 @@ export const createDemand: (req: NextApiRequest, res: NextApiResponse) => Promis
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  const { userId, title, description } = req.body;
+  const { title, description } = req.body;
+  const userId = (req as any).userId; // Pegue o userId do middleware de autenticação
+
+  if (!title || !description) {
+    return res.status(400).json({ message: 'Título e descrição são obrigatórios' });
+  }
+
+  if(!userId) {
+    return res.status(400).json({ message: 'userId nao fornecido' });
+  }
 
   try {
     // Cria uma nova instância da demanda com o ID do usuário associado
