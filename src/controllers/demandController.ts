@@ -101,7 +101,7 @@ export const updateDemand = async (req: NextApiRequest, res: NextApiResponse) =>
   await connectToDatabase();
 
   // Extrai o ID da demanda e os novos dados da requisição
-  const { id } = req.query;
+  const { demandId } = req.query;
   const { title, description } = req.body;
 
   // Obtém o ID do usuário do middleware de autenticação
@@ -112,11 +112,11 @@ export const updateDemand = async (req: NextApiRequest, res: NextApiResponse) =>
   }
 
   try {
-    // Verifica se a demanda com o ID fornecido existe
-    const existingDemand = await Demand.findById(id);
+    // Verifica se a demanda com o ID fornecido existe e se pertence ao usuário autenticado
+    const existingDemand = await Demand.findOne({ _id: demandId, user: userId });
 
     if (!existingDemand) {
-      return res.status(404).json({ message: 'Demanda não encontrada' });
+      return res.status(404).json({ message: 'Demanda não encontrada ou não pertence ao usuário autenticado' });
     }
 
     // Atualiza os dados da demanda com os novos dados
