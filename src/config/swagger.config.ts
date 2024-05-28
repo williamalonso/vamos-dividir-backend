@@ -10,7 +10,10 @@ const options: swaggerJSDoc.Options = {
       version: '1.0.0',
       description: 'Documentação da API Next.js',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [
+      { url: 'http://localhost:3000' },
+      { url: 'https://vamos-dividir-backend.vercel.app' }
+    ],
     paths: {
       '/api/hello': {
         get: {
