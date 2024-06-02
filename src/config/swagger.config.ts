@@ -561,6 +561,171 @@ const options: swaggerJSDoc.Options = {
             }
           }
         }
+      },
+      '/api/demand/delete/{demandId}': {
+        delete: {
+          summary: 'Deleta uma demanda',
+          tags: ['Demand'],
+          security: [
+            {
+              bearerAuth: []
+            }
+          ],
+          parameters: [
+            {
+              name: 'demandId',
+              in: 'path',
+              required: true,
+              description: 'ID da demanda a ser deletada',
+              schema: {
+                type: 'string'
+              }
+            }
+          ],
+          responses: {
+            200: {
+              description: 'Demanda deletada com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda deletada com sucesso' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'ID da demanda ou userId não fornecidos',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'userId nao fornecido' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Demanda não encontrada',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda não encontrada' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro ao deletar demanda' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/api/demand/demandId/{demandId}': {
+        get: {
+          summary: 'Obter uma demanda por ID',
+          tags: ['Demand'],
+          security: [
+            {
+              bearerAuth: []
+            }
+          ],
+          parameters: [
+            {
+              name: 'demandId',
+              in: 'path',
+              required: true,
+              description: 'ID da demanda a ser obtida',
+              schema: {
+                type: 'string'
+              }
+            }
+          ],
+          responses: {
+            200: {
+              description: 'Demanda obtida com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      _id: { type: 'string' },
+                      user: { type: 'string' },
+                      title: { type: 'string' },
+                      description: { type: 'string' },
+                      createdAt: { type: 'string' },
+                      updatedAt: { type: 'string' },
+                    }
+                  },
+                  example: {
+                    _id: '60d9f9f5f29b9c001c8e4d3b',
+                    user: '60d9f9f5f29b9c001c8e4d3a',
+                    title: 'Título da demanda',
+                    description: 'Descrição detalhada da demanda',
+                    createdAt: '2023-05-27T14:56:28.029Z',
+                    updatedAt: '2023-05-27T14:56:28.029Z'
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'ID da demanda ou userId não fornecidos',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'demandId nao fornecido' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Demanda não encontrada',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda não encontrada' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro ao buscar a demanda' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
   },
