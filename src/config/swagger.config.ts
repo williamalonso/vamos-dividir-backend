@@ -213,6 +213,78 @@ const options: swaggerJSDoc.Options = {
             }
           }
         }
+      },
+      '/api/user/delete': {
+        delete: {
+          summary: 'Exclui um usuário',
+          tags: ['User'],
+          parameters: [
+            {
+              name: 'id',
+              in: 'query',
+              required: true,
+              schema: {
+                type: 'string',
+                example: '60c72b2f9b1d4c23d8a25f4b'
+              },
+              description: 'ID do usuário a ser excluído'
+            }
+          ],
+          responses: {
+            200: {
+              description: 'Usuário excluído com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário excluído com sucesso' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'ID do usuário não fornecido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'ID do usuário não fornecido.' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Usuário não encontrado',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário não encontrado' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro no servidor' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
   },
