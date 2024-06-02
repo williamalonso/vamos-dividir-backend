@@ -12,6 +12,10 @@ export const createDemand: (req: NextApiRequest, res: NextApiResponse) => Promis
   const { title, description } = req.body;
   const userId = (req as any).userId; // Pegue o userId do middleware de autenticação
 
+  console.log(title)
+  console.log(description)
+  console.log(userId)
+
   if (!title || !description) {
     return res.status(400).json({ message: 'Título e descrição são obrigatórios' });
   }

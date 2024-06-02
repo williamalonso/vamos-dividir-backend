@@ -14,6 +14,18 @@ const options: swaggerJSDoc.Options = {
       { url: 'http://localhost:3000' },
       { url: 'https://vamos-dividir-backend.vercel.app' }
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{
+      bearerAuth: [],
+    }],
     paths: {
       '/api/user/getall': {
         get: {
@@ -455,6 +467,80 @@ const options: swaggerJSDoc.Options = {
                     type: 'object',
                     properties: {
                       message: { type: 'string', example: 'Usuário não encontrado' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro no servidor' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/api/demand/create': {
+        post: {
+          summary: 'Cria uma nova demanda',
+          tags: ['Demand'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    title: { type: 'string', example: 'Título da demanda' },
+                    description: { type: 'string', example: 'Descrição detalhada da demanda' }
+                  },
+                  required: ['title', 'description']
+                }
+              }
+            }
+          },
+          parameters: [
+            {
+              name: 'Authorization',
+              in: 'header',
+              required: true,
+              schema: {
+                type: 'string',
+                example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+              },
+              description: 'Token JWT para autenticação'
+            }
+          ],
+          responses: {
+            201: {
+              description: 'Demanda criada com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda criada com sucesso' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'Título, descrição ou userId não fornecidos',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Título e descrição são obrigatórios' }
                     }
                   }
                 }
