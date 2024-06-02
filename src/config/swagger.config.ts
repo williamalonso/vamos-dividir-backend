@@ -125,6 +125,94 @@ const options: swaggerJSDoc.Options = {
             }
           }
         }
+      },
+      '/api/user/login': {
+        post: {
+          summary: 'Autentica um usuário',
+          tags: ['User'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    email: { type: 'string', example: 'johndoe@example.com' },
+                    password: { type: 'string', example: 'Password123!' }
+                  },
+                  required: ['email', 'password']
+                }
+              }
+            }
+          },
+          responses: {
+            200: {
+              description: 'Login bem-sucedido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'Requisição inválida',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Por favor, forneça email e senha.' }
+                    }
+                  }
+                }
+              }
+            },
+            401: {
+              description: 'Credenciais inválidas',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário não encontrado ou senha inválida.' }
+                    }
+                  }
+                }
+              }
+            },
+            405: {
+              description: 'Método não permitido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Método não permitido' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro no servidor' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
   },
