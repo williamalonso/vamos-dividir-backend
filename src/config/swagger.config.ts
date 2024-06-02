@@ -507,18 +507,6 @@ const options: swaggerJSDoc.Options = {
               }
             }
           },
-          parameters: [
-            {
-              name: 'Authorization',
-              in: 'header',
-              required: true,
-              schema: {
-                type: 'string',
-                example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-              },
-              description: 'Token JWT para autenticação'
-            }
-          ],
           responses: {
             201: {
               description: 'Demanda criada com sucesso',
@@ -719,6 +707,170 @@ const options: swaggerJSDoc.Options = {
                     type: 'object',
                     properties: {
                       message: { type: 'string', example: 'Erro ao buscar a demanda' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/api/demand/getall': {
+        get: {
+          summary: 'Obter todas as demandas do usuário autenticado',
+          tags: ['Demand'],
+          security: [
+            {
+              bearerAuth: []
+            }
+          ],
+          responses: {
+            200: {
+              description: 'Demandas obtidas com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        _id: { type: 'string' },
+                        user: { type: 'string' },
+                        title: { type: 'string' },
+                        description: { type: 'string' },
+                        createdAt: { type: 'string' },
+                        updatedAt: { type: 'string' },
+                      }
+                    },
+                    example: [
+                      {
+                        _id: '60d9f9f5f29b9c001c8e4d3b',
+                        user: '60d9f9f5f29b9c001c8e4d3a',
+                        title: 'Título da demanda',
+                        description: 'Descrição detalhada da demanda',
+                        createdAt: '2023-05-27T14:56:28.029Z',
+                        updatedAt: '2023-05-27T14:56:28.029Z'
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'userId ou token não fornecido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'userId ou token nao fornecido' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro ao buscar as demandas do usuário' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/api/demand/update/{demandId}': {
+        put: {
+          summary: 'Atualizar uma demanda do usuário autenticado',
+          tags: ['Demand'],
+          security: [
+            {
+              bearerAuth: []
+            }
+          ],
+          parameters: [
+            {
+              name: 'demandId',
+              in: 'path',
+              required: true,
+              description: 'ID da demanda a ser atualizada',
+              schema: {
+                type: 'string'
+              }
+            }
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                  },
+                  example: {
+                    title: 'Novo título da demanda',
+                    description: 'Nova descrição detalhada da demanda'
+                  }
+                }
+              }
+            }
+          },
+          responses: {
+            200: {
+              description: 'Demanda atualizada com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda atualizada com sucesso' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'userId não fornecido ou parâmetros inválidos',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'userId nao fornecido' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Demanda não encontrada ou não pertence ao usuário autenticado',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Demanda não encontrada ou não pertence ao usuário autenticado' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro ao atualizar demanda' }
                     }
                   }
                 }
