@@ -15,30 +15,6 @@ const options: swaggerJSDoc.Options = {
       { url: 'https://vamos-dividir-backend.vercel.app' }
     ],
     paths: {
-      '/api/hello': {
-        get: {
-          summary: 'Retorna uma mensagem de hello world',
-          tags: ['Example'],
-          responses: {
-            200: {
-              description: 'Mensagem de sucesso',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: {
-                        type: 'string',
-                        example: 'Hello, world!',
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
       '/api/user/getall': {
         get: {
           summary: 'Retorna todos os usuários',
@@ -80,6 +56,76 @@ const options: swaggerJSDoc.Options = {
           },
         },
       },
+      '/api/user/create': {
+        post: {
+          summary: 'Cria um novo usuário',
+          tags: ['User'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    email: { type: 'string', example: 'johndoe@example.com' },
+                    password: { type: 'string', example: 'Password123!' }
+                  },
+                  required: ['email', 'password']
+                }
+              }
+            }
+          },
+          responses: {
+            201: {
+              description: 'Usuário cadastrado com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário cadastrado com sucesso.' },
+                      user: {
+                        type: 'object',
+                        properties: {
+                          _id: { type: 'string', example: '60c72b2f9b1d4c23d8a25f4b' },
+                          email: { type: 'string', example: 'johndoe@example.com' },
+                          password: { type: 'string', example: '$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36ZZz27TPwskUfp7TfZCK' } // hashed password
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'O usuário já existe',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'O usuário já existe' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro no servidor' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
   },
   apis: [], // Deixe vazio porque estamos definindo os endpoints diretamente aqui
