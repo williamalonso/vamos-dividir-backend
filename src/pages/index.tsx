@@ -1,14 +1,13 @@
-// src/pages/index.tsx
+// pages/api-docs.tsx
 
 import React from 'react';
+import dynamic from 'next/dynamic';
+import 'swagger-ui-react/swagger-ui.css';
 
-const HomePage = () => {
+const SwaggerUI = dynamic(() => import('swagger-ui-react'), { ssr: false });
 
-  return (
-    <div>
-      Esta é a página inicial da api
-    </div>
-  );
-};
+const HomePage: React.FC = () => (
+  <SwaggerUI url="/api/swagger" />
+);
 
 export default HomePage;
