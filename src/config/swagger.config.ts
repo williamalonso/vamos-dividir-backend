@@ -285,6 +285,108 @@ const options: swaggerJSDoc.Options = {
             }
           }
         }
+      },
+      '/api/user/update': {
+        post: {
+          summary: 'Atualiza a senha de um usuário',
+          tags: ['User'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    email: { type: 'string', example: 'johndoe@example.com' },
+                    currentPassword: { type: 'string', example: 'CurrentPassword123!' },
+                    newPassword: { type: 'string', example: 'NewPassword456!' }
+                  },
+                  required: ['email', 'currentPassword', 'newPassword']
+                }
+              }
+            }
+          },
+          responses: {
+            200: {
+              description: 'Senha atualizada com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Senha atualizada com sucesso.' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'Requisição inválida',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Por favor, forneça email, senha atual e nova senha.' }
+                    }
+                  }
+                }
+              }
+            },
+            401: {
+              description: 'Senha atual inválida',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Senha atual inválida.' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Usuário não encontrado',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário não encontrado.' }
+                    }
+                  }
+                }
+              }
+            },
+            405: {
+              description: 'Método não permitido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Método não permitido' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro ao atualizar senha do usuário.' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
   },
