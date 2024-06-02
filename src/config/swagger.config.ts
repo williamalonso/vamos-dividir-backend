@@ -387,6 +387,94 @@ const options: swaggerJSDoc.Options = {
             }
           }
         }
+      },
+      '/api/auth/renew': {
+        post: {
+          summary: 'Renova o token JWT de um usuário',
+          tags: ['Auth'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+                  },
+                  required: ['token']
+                }
+              }
+            }
+          },
+          responses: {
+            200: {
+              description: 'Token renovado com sucesso',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+                      message: { type: 'string', example: 'Token renovado com sucesso' }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: 'Token não fornecido',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Token não fornecido' }
+                    }
+                  }
+                }
+              }
+            },
+            401: {
+              description: 'Token inválido ou expirado',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Token inválido ou expirado' }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: 'Usuário não encontrado',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Usuário não encontrado' }
+                    }
+                  }
+                }
+              }
+            },
+            500: {
+              description: 'Erro no servidor',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string', example: 'Erro no servidor' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
   },
