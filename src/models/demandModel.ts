@@ -6,7 +6,7 @@ import { demandInterface } from '@/interface/demandInterface';
 const demandSchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
-  description: { type: String, required: true },
+  peopleNames: { type: [String], required: true },
   // Defina outros campos da demanda conforme necessário
 });
 

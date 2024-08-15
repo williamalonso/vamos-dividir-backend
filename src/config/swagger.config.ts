@@ -500,9 +500,13 @@ const options: swaggerJSDoc.Options = {
                   type: 'object',
                   properties: {
                     title: { type: 'string', example: 'Título da demanda' },
-                    description: { type: 'string', example: 'Descrição detalhada da demanda' }
+                    peopleNames: { 
+                      type: 'array',
+                      items: { type: 'string' },
+                      example: ['João', 'Maria'] 
+                    }
                   },
-                  required: ['title', 'description']
+                  required: ['title', 'peopleNames']
                 }
               }
             }
@@ -522,13 +526,13 @@ const options: swaggerJSDoc.Options = {
               }
             },
             400: {
-              description: 'Título, descrição ou userId não fornecidos',
+              description: 'Título, nomes de pessoas ou userId não fornecidos',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
-                      message: { type: 'string', example: 'Título e descrição são obrigatórios' }
+                      message: { type: 'string', example: 'Título e nomes de pessoas são obrigatórios' }
                     }
                   }
                 }

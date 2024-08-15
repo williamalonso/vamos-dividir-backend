@@ -9,15 +9,15 @@ export const createDemand: (req: NextApiRequest, res: NextApiResponse) => Promis
   // Conecta ao banco de dados
   await connectToDatabase();
 
-  const { title, description } = req.body;
+  const { title, peopleNames } = req.body;
   const userId = (req as any).userId; // Pegue o userId do middleware de autenticação
 
   console.log(title)
-  console.log(description)
+  console.log(peopleNames)
   console.log(userId)
 
-  if (!title || !description) {
-    return res.status(400).json({ message: 'Título e descrição são obrigatórios' });
+  if (!title || !Array.isArray(peopleNames)) {
+    return res.status(400).json({ message: 'Título e nomes de pessoas são obrigatórios' });
   }
 
   if(!userId) {
@@ -26,7 +26,7 @@ export const createDemand: (req: NextApiRequest, res: NextApiResponse) => Promis
 
   try {
     // Cria uma nova instância da demanda com o ID do usuário associado
-    const newDemand = new Demand({ user: userId, title, description });
+    const newDemand = new Demand({ user: userId, title, peopleNames });
     await newDemand.save();
 
     // Retorna uma resposta de sucesso
