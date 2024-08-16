@@ -5,18 +5,6 @@ import { createDemand } from '@/controllers/demandController';
 import authMiddleware from '@/middleware/authMiddleware';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-
-  // Adiciona cabeçalhos CORS
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Permite qualquer origem, ajuste conforme necessário
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    // Responde às requisições OPTIONS (preflight) para CORS
-    res.status(200).end();
-    return;
-  }
-  
   if (req.method === 'POST') {
     // Chama o controlador para criar a demanda
     await createDemand(req, res);
