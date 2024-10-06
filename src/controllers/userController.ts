@@ -206,21 +206,24 @@ export const updatePassword = async (req: NextApiRequest, res: NextApiResponse) 
 
 // renovar token
 export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
+  
   const JWT_SECRET = process.env.JWT_SECRET;
+  const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET não está definido.');
+  if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+    throw new Error('JWT_SECRET ou JWT_REFRESH_SECRET não estão definidos.');
   }
 
-  const { token } = req.body;
+  // const { token } = req.body;
+  const { refreshToken } = req.body;
 
-  if (!token) {
-    return res.status(400).json({ message: 'Token não fornecido' });
+  if (!refreshToken) {
+    return res.status(400).json({ message: 'Token de atualização não fornecido' });
   }
 
   try {
-    // Verificar e decodificar o token
-    const decoded = jwt.verify(token, `${JWT_SECRET}`) as { userId: string };
+    // Verificar e decodificar o token de atualização
+    const decoded = jwt.verify(refreshToken, `${JWT_REFRESH_SECRET}`) as { userId: string };
 
     // Verificar se o usuário ainda existe no banco de dados
     await connectToDatabase();
@@ -230,16 +233,22 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
 
-    // Gerar um novo token
-    const newToken = jwt.sign({ userId: user._id }, `${JWT_SECRET}`, { expiresIn: '24h' });
+    // Gerar um novo token de acesso
+    const newAccessToken  = jwt.sign({ userId: user._id }, `${JWT_SECRET}`, { expiresIn: '24h' });
 
-    // Retorna o novo token
-    res.status(200).json({ token: newToken, message: 'Token renovavo com sucesso' });
+    // Opcional: gerar um novo token de atualização (se necessário)
+    const newRefreshToken = jwt.sign({ userId: user._id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+    // Retorna os novos tokens
+    res.status(200).json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken, // Retorne apenas se estiver gerando um novo
+      message: 'Tokens renovados com sucesso',
+    });
 
   } catch (error) {
-
-    console.error('Erro ao renovar o token:', error);
-    res.status(401).json({ message: 'Token inválido ou expirado' });
+    console.error('Erro ao renovar os tokens:', error);
+    res.status(401).json({ message: 'Token de atualização inválido ou expirado' });
   }
 
 };
