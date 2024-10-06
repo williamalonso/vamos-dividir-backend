@@ -411,22 +411,23 @@ const options: swaggerJSDoc.Options = {
                 schema: {
                   type: 'object',
                   properties: {
-                    token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+                    refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
                   },
-                  required: ['token']
+                  required: ['refreshToken']
                 }
               }
             }
           },
           responses: {
             200: {
-              description: 'Token renovado com sucesso',
+              description: 'Tokens renovados com sucesso',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
-                      token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+                      accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+                      refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
                       message: { type: 'string', example: 'Token renovado com sucesso' }
                     }
                   }
@@ -434,26 +435,26 @@ const options: swaggerJSDoc.Options = {
               }
             },
             400: {
-              description: 'Token não fornecido',
+              description: 'Token de atualização não fornecido',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
-                      message: { type: 'string', example: 'Token não fornecido' }
+                      message: { type: 'string', example: 'Token de atualização não fornecido' }
                     }
                   }
                 }
               }
             },
             401: {
-              description: 'Token inválido ou expirado',
+              description: 'Token de atualização inválido ou expirado',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
-                      message: { type: 'string', example: 'Token inválido ou expirado' }
+                      message: { type: 'string', example: 'Token de atualização inválido ou expirado' }
                     }
                   }
                 }
