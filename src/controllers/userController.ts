@@ -52,15 +52,21 @@ export const registerUser = async (req: NextApiRequest, res: NextApiResponse) =>
   }
 };
 
+// Expiração para o token de acesso (curto prazo)
+const ACCESS_TOKEN_EXPIRATION = '15m'; // 15 minutos
+// Expiração para o token de atualização (longo prazo)
+const REFRESH_TOKEN_EXPIRATION = '7d'; // 7 dias
 // login
 export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
   
-  // Chave secreta para assinar o token JWT
+  // Chave secreta para assinar/criar o token JWT do user
   const JWT_SECRET = process.env.JWT_SECRET;
+  // Chave secreta para renovar o token JWT do user
+  const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
   // Verificar se JWT_SECRET está definido
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET não está definido.');
+  if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+    throw new Error('JWT_SECRET ou JWT_REFRESH_SECRET não está definido.');
   }
 
   // verifica se o método é POST
@@ -94,13 +100,22 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(401).json({ message: 'Senha inválida' });
     }
 
-    // Gerar um token JWT com o ID do usuário como payload
-    const token = jwt.sign({ userId: user._id, email: user.email}, `${JWT_SECRET}`, {
-      expiresIn: '24h',
-    });
+    // Gerar o token de acesso (expira em 15 minutos)
+    const accessToken = jwt.sign(
+      { userId: user._id, email: user.email }, 
+      `${JWT_SECRET}`, 
+      { expiresIn: ACCESS_TOKEN_EXPIRATION }
+    );
+
+    // Gerar o token de atualização (expira em 7 dias)
+    const refreshToken = jwt.sign(
+      { userId: user._id, email: user.email }, 
+      JWT_REFRESH_SECRET, 
+      { expiresIn: REFRESH_TOKEN_EXPIRATION }
+    );
 
     // Retorna o token JWT
-    return res.status(200).json({ token });
+    return res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     console.error('Erro no login:', error);
     return res.status(500).json({ message: 'Erro no servidor' });
