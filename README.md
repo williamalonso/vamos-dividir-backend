@@ -1,9 +1,11 @@
+
 <h1 align="center">
-    Vamos Dividir - API
+    
+[Vamos Dividir - API](https://vamos-dividir-backend.vercel.app/)
+
 </h1>
 
 ---
-
 
 ### 🤔 Sobre o Sistema?
 
@@ -37,6 +39,14 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 ---
 
 ## 🙅 Instalações e usos:
+
+Acesse a api clicando [aqui](https://vamos-dividir-backend.vercel.app/) e altere o server para `vamos-dividir-backend.vercel.app`
+
+Crie um usuario no endpoint `/api/user/create` e depois faça login no endpoint `/api/user/login`. Anote o "accessToken".
+
+Insira o "accessToken" no campo superior direito "Authorize".
+
+Crie uma ou duas demandas no endpoint `/api/demand/create` e depois visualize-as no endpoint `/api/demand/getall`.
 
 O sistema foi desenvolvido usando Visual Studio Code e a versão do Node é `^20`.
 
