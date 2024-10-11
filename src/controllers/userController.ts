@@ -119,6 +119,7 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Set-Cookie', serialize('refreshToken', refreshToken, {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production', // Use secure apenas em produção
+      secure: process.env.NODE_ENV === 'development',
       sameSite: 'strict',
       path: '/', // Caminho para o qual o cookie é válido
       maxAge: 7 * 24 * 60 * 60, // 7 dias em segundos
@@ -257,6 +258,7 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Set-Cookie', cookie.serialize('refreshToken', newRefreshToken, {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'development',
       sameSite: 'strict',
       path: '/',
       maxAge: 60 * 60 * 24 * 7 // 7 dias
