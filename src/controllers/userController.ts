@@ -2,6 +2,7 @@
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { serialize } from 'cookie';
 import User from '@/models/userModel';
 import connectToDatabase from '@/config/database';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -114,8 +115,17 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
       { expiresIn: REFRESH_TOKEN_EXPIRATION }
     );
 
+    // Definir o cookie HttpOnly para o refreshToken
+    res.setHeader('Set-Cookie', serialize('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure apenas em produção
+      sameSite: 'strict',
+      path: '/', // Caminho para o qual o cookie é válido
+      maxAge: 7 * 24 * 60 * 60, // 7 dias em segundos
+    }));
+
     // Retorna o token JWT
-    return res.status(200).json({ accessToken, refreshToken });
+    return res.status(200).json({ accessToken });
   } catch (error) {
     console.error('Erro no login:', error);
     return res.status(500).json({ message: 'Erro no servidor' });
