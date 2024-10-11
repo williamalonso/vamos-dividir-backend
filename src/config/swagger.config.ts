@@ -414,15 +414,13 @@ const options: swaggerJSDoc.Options = {
           summary: 'Renova o token JWT de um usuário',
           tags: ['Auth'],
           requestBody: {
-            required: true,
+            required: false,  // Você pode definir como false, pois o refreshToken é enviado via cookie,
             content: {
               'application/json': {
                 schema: {
                   type: 'object',
-                  properties: {
-                    refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
-                  },
-                  required: ['refreshToken']
+                  properties: {},
+                  required: [] // Não há campos obrigatórios
                 }
               }
             }
@@ -436,7 +434,6 @@ const options: swaggerJSDoc.Options = {
                     type: 'object',
                     properties: {
                       accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
-                      refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
                       message: { type: 'string', example: 'Token renovado com sucesso' }
                     }
                   }

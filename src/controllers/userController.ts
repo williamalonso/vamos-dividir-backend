@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { serialize } from 'cookie';
+import cookie, { serialize } from 'cookie';
 import User from '@/models/userModel';
 import connectToDatabase from '@/config/database';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -224,8 +224,12 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('JWT_SECRET ou JWT_REFRESH_SECRET não estão definidos.');
   }
 
-  // const { token } = req.body;
-  const { refreshToken } = req.body;
+  // Obter o refreshToken do cookie
+  const cookies = req.headers.cookie;
+  if (!cookies) {
+    return res.status(400).json({ message: 'Cookies não fornecidos' });
+  }
+  const { refreshToken } = cookie.parse(cookies);
 
   if (!refreshToken) {
     return res.status(400).json({ message: 'Token de atualização não fornecido' });
@@ -249,10 +253,18 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
     // Opcional: gerar um novo token de atualização (se necessário)
     const newRefreshToken = jwt.sign({ userId: user._id }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
-    // Retorna os novos tokens
+    // Atualizar o refreshToken no cookie (se gerando um novo)
+    res.setHeader('Set-Cookie', cookie.serialize('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7 // 7 dias
+    }));
+
+    // Retornar apenas o novo token de acesso no corpo da resposta
     res.status(200).json({
       accessToken: newAccessToken,
-      refreshToken: newRefreshToken, // Retorne apenas se estiver gerando um novo
       message: 'Tokens renovados com sucesso',
     });
 
