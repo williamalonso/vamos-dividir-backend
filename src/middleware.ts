@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": process.env.NODE_ENV === 'production'
+    ? "https://vamos-dividir.vercel.app"
+    : "http://localhost:3000",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Credentials": "true", // Permitir credenciais como cookies
 }
 
 export function middleware(request: NextRequest) {
