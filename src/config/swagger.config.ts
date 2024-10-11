@@ -159,15 +159,23 @@ const options: swaggerJSDoc.Options = {
           },
           responses: {
             200: {
-              description: 'Login bem-sucedido',
+              description: 'Login bem-sucedido. O accessToken é retornado no corpo e o refreshToken é enviado como um cookie HttpOnly.',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
                       accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
-                      refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
                     }
+                  }
+                }
+              },
+              headers: {
+                'Set-Cookie': {
+                  description: 'O refreshToken é enviado como um cookie HttpOnly',
+                  schema: {
+                    type: 'string',
+                    example: 'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Path=/; Max-Age=604800;'
                   }
                 }
               }
