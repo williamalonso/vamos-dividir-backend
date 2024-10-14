@@ -278,3 +278,34 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
 };
+
+// verificar se o token ainda e valido ou ja expirou
+export const verifyToken = async (req: NextApiRequest, res: NextApiResponse) => {
+  const JWT_SECRET = process.env.JWT_SECRET;
+
+  if (!JWT_SECRET) {
+    return res.status(500).json({ message: 'JWT_SECRET não está definido.' });
+  }
+
+  // Obter o token de acesso do cabeçalho da requisição
+  const accessToken = req.headers.authorization?.split(' ')[1]; // "Bearer <token>"
+
+  if (!accessToken) {
+    return res.status(400).json({ message: 'Token de acesso não fornecido' });
+  }
+
+  try {
+    // Verificar e decodificar o token de acesso
+    const decoded = jwt.verify(accessToken, JWT_SECRET) as { userId: string };
+
+    // Retornar uma resposta indicando que o token é válido
+    res.status(200).json({
+      valid: true,
+      userId: decoded.userId,
+      message: 'Token de acesso é válido',
+    });
+  } catch (error) {
+    console.error('Erro ao verificar o token:', error);
+    res.status(401).json({ valid: false, message: 'Token de acesso inválido ou expirado' });
+  }
+};
