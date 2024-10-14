@@ -495,6 +495,102 @@ const options: swaggerJSDoc.Options = {
           }
         }
       },
+      "/api/auth/verify": {
+        "post": {
+          "summary": "Verifica a validade do token de acesso JWT.",
+          "tags": ["Auth"],
+          "requestBody": {
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "required": []
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "O token de acesso é válido.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "valid": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "1234567890"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Token de acesso é válido"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Token de acesso não fornecido.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Token de acesso não fornecido"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de acesso inválido ou expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "valid": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Token de acesso inválido ou expirado"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro interno do servidor.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "JWT_SECRET não está definido."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       '/api/demand/create': {
         post: {
           summary: 'Cria uma nova demanda',
