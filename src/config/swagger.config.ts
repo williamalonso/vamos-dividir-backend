@@ -441,13 +441,13 @@ const options: swaggerJSDoc.Options = {
               }
             },
             400: {
-              description: 'Token de atualização não fornecido',
+              description: 'Cookies ou Token de atualização não fornecido',
               content: {
                 'application/json': {
                   schema: {
                     type: 'object',
                     properties: {
-                      message: { type: 'string', example: 'Token de atualização não fornecido' }
+                      message: { type: 'string', example: 'Cookies ou Token de atualização não fornecido' }
                     }
                   }
                 }
