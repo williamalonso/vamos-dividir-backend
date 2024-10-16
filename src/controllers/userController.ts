@@ -218,7 +218,6 @@ export const updatePassword = async (req: NextApiRequest, res: NextApiResponse) 
 
 // renovar token
 export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
-  
   const JWT_SECRET = process.env.JWT_SECRET;
   const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
@@ -226,56 +225,57 @@ export const renewToken = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('JWT_SECRET ou JWT_REFRESH_SECRET não estão definidos.');
   }
 
-  const refreshToken = req.body.refreshToken || req.headers.authorization?.split(' ')[1];
-
-  if (!refreshToken) {
-    return res.status(400).json({ message: 'Token de atualização não fornecido' });
-  }
-
   try {
-    // Verificar e decodificar o token de atualização
-    const decoded = jwt.verify(refreshToken, `${JWT_REFRESH_SECRET}`) as { userId: string };
+    // Extrair o refreshToken do cookie
+    const cookies = cookie.parse(req.headers.cookie || '');
+    const refreshToken = cookies.refreshToken;
 
-    // Verificar se o usuário ainda existe no banco de dados
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'Token de atualização não fornecido' });
+    }
+
+    // Verificar e decodificar o refreshToken
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { userId: string };
+
+    // Conectar ao banco e verificar se o usuário existe
     await connectToDatabase();
     const user = await User.findById(decoded.userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
 
-    // Gerar um novo token de acesso
-    const newAccessToken  = jwt.sign({ userId: user._id }, `${JWT_SECRET}`, { expiresIn: '24h' });
+    // Gerar novo token de acesso
+    const newAccessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '24h' });
 
-    // Opcional: gerar um novo token de atualização (se necessário)
+    // Opcionalmente, gerar novo refreshToken
     const newRefreshToken = jwt.sign(
-      { userId: user._id, email: user.email }, 
-      JWT_REFRESH_SECRET, 
-      { expiresIn: REFRESH_TOKEN_EXPIRATION }
+      { userId: user._id, email: user.email },
+      JWT_REFRESH_SECRET,
+      { expiresIn: '7d' }
     );
 
     // Atualizar o refreshToken no cookie
-    res.setHeader('Set-Cookie', cookie.serialize('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
-      secure: false,
-      // sameSite: 'strict',
-      sameSite: 'lax', // Para permitir cookies entre diferentes origens
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 7 dias
-    }));
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 7 dias
+      })
+    );
 
-    // Retornar apenas o novo token de acesso no corpo da resposta
+    // Retornar o novo token de acesso
     res.status(200).json({
       accessToken: newAccessToken,
       message: 'Tokens renovados com sucesso',
     });
-
   } catch (error) {
     console.error('Erro ao renovar os tokens:', error);
     res.status(401).json({ message: 'Token de atualização inválido ou expirado' });
   }
-
 };
 
 // verificar se o token ainda e valido ou ja expirou
