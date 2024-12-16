@@ -13,7 +13,7 @@
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.6.2",
-    "mongoose": "^8.4.0",
+    "mongoose": "^8.9.1",
     "next": "14.2.3",
     "next-connect": "^1.0.0",
     "react": "^18",
