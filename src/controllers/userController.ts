@@ -126,8 +126,11 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
       maxAge: 7 * 24 * 60 * 60, // 7 dias em segundos
     }));
 
-    // Retorna o token JWT
-    return res.status(200).json({ accessToken });
+    // Remove a senha do objeto do usuário antes de retornar
+    const { password: _, ...userWithoutPassword } = user.toObject();
+
+    // Retorna o token JWT e os dados do usuário
+    return res.status(200).json({ accessToken, user: userWithoutPassword });
   } catch (error) {
     console.error('Erro no login:', error);
     return res.status(500).json({ message: 'Erro no servidor' });
