@@ -6,4 +6,5 @@ export interface userInterface extends Document {
   email: string;
   password: string;
   jwtToken?: string;
+  isPremium: boolean;
 }
