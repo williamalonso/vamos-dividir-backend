@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import cookie, { serialize } from 'cookie';
+import * as cookie from 'cookie';
 import User from '@/models/userModel';
 import connectToDatabase from '@/config/database';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -116,7 +116,7 @@ export const loginUser = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     // Definir o cookie HttpOnly para o refreshToken
-    res.setHeader('Set-Cookie', serialize('refreshToken', refreshToken, {
+    res.setHeader('Set-Cookie', cookie.serialize('refreshToken', refreshToken, {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production', // Use secure apenas em produção
       secure: false,
